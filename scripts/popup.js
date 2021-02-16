@@ -1,6 +1,4 @@
-const port = chrome.extension.connect({
-    name: 'linkoo-message-channel',
-});
+var background = chrome.extension.getBackgroundPage();
 
 const API_BASE_URL = 'https://web7686.cweb03.gamingweb.de';
 
@@ -10,66 +8,65 @@ const loginInfo = document.getElementById('login-info');
 const accountInfo = document.getElementById('account-info');
 const logoutBtn = document.getElementById('logout-btn');
 
-// Listening for authentication events
-loginForm.addEventListener('submit', login);
-logoutBtn.addEventListener('click', logout);
-
-// get saved user & validate
-chrome.storage.sync.get(['user'], async ({ user }) => {
-    console.log('User value:', { user });
-    if (user) {
-        const response = await fetch(`${API_BASE_URL}/user/validate`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId: user.identifier }),
-        });
-        const { success } = await response.json();
-        if (success) {
-            port.postMessage({ type: 'login', user });
-            loginInfo.style.display = 'none';
-            accountInfo.style.display = 'block';
-            setTimeout(() => (accountInfo.style.opacity = '1'), 10);
-
-            const accountName = document.getElementById('account-info__name');
-            accountName.innerHTML = user.name;
-            return
-        }
-    }
-
-    loginInfo.style.display = 'block';
-    setTimeout(() => (loginInfo.style.opacity = '1'), 10);
+const port = chrome.runtime.connect({
+    name: 'linkoo-message-channel',
 });
 
-function removeUser() {
-    chrome.storage.sync.set({ user: {} });
-    window.location.reload();
-}
-
-function logout() {
-    removeUser();
-    port.postMessage({ type: 'disconnect' });
-}
-
-async function login(e) {
-    e.stopImmediatePropagation();
+// Listening for authentication events
+loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const nameInput = document.getElementById('login-name-input');
-    console.log(nameInput.value, 'INPUT VALUE!');
-    // replace later!!! https://web7686.cweb03.gamingweb.de/login`
-    const response = await fetch(`${API_BASE_URL}/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            name: nameInput.value,
-        }),
-    });
-    const data = await response.json();
-    if (data.success) {
-        chrome.storage.sync.set({ user: data.user }, null);
-        window.location.reload();
+    port.postMessage({ type: 'login', details: { name: nameInput.value } });
+});
+logoutBtn.addEventListener('click', () => {
+    port.postMessage({ type: 'disconnect' });
+});
+
+port.onMessage.addListener(function (data) {
+    console.log('Popup port result!:', data);
+    if (data.type === 'login') {
+        console.log('New login!');
+        showUserDetails(data);
+    } else if (data.type === 'logout') {
+        showLoginDetails();
+    } else if (data.type === 'user') {
+        console.log('User data received.');
+        console.log('Received user data:', data);
+        if (!data.details.user.name) {
+            showLoginDetails();
+        } else {
+            showUserDetails(data);
+        }
     }
-    return false;
+});
+
+function showUserDetails(data) {
+    loginInfo.style.display = 'none';
+    accountInfo.style.display = 'block';
+    setTimeout(() => (accountInfo.style.opacity = '1'), 10);
+
+    const accountName = document.getElementById('account-info__name');
+    accountName.innerHTML = data.details.user.name;
 }
+
+function showLoginDetails() {
+    loginInfo.style.display = 'block';
+    accountInfo.style.display = 'none';
+    setTimeout(() => (loginInfo.style.opacity = '1'), 10);
+}
+
+port.postMessage({ type: 'user' });
+
+addEventListener(
+    'unload',
+    function (event) {
+        background.console.log(event.type);
+        port.disconnect();
+    },
+    true
+);
+
+// get saved user & validate
 
 // actually open hrefs
 const clickedHref = (e) => chrome.tabs.create({ url: e.target.href });
