@@ -14,9 +14,8 @@ let id = () => {
 const linkooExtensionId = id();
 
 chrome.extension.onConnect.addListener(function (port) {
+    console.log('Port:', port);
     port.onMessage.addListener(async function (result) {
-        console.log('Port name:', port.name);
-        console.log('Port:', port);
         console.log('Result:', result);
         if (port.name === 'linkoo-message-channel') {
             if (result.type === 'login') {
@@ -25,6 +24,7 @@ chrome.extension.onConnect.addListener(function (port) {
                 socket.emit('leave');
             }
         } else if (port.name === 'linkoo-notifier') {
+            port.postMessage({ port: 'linkoo-notifier', message: { type: 'extensionId', id: linkooExtensionId } });
         }
     });
 });
