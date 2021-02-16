@@ -17,25 +17,27 @@ logoutBtn.addEventListener('click', logout);
 // get saved user & validate
 chrome.storage.sync.get(['user'], async ({ user }) => {
     console.log('User value:', { user });
-    if (!user) return;
-    const response = await fetch(`${API_BASE_URL}/user/validate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user.identifier }),
-    });
-    const { success } = await response.json();
-    if (success) {
-        port.postMessage({ type: 'login', user });
-        loginInfo.style.display = 'none';
-        accountInfo.style.display = 'block';
-        setTimeout(() => (accountInfo.style.opacity = '1'), 10);
+    if (user) {
+        const response = await fetch(`${API_BASE_URL}/user/validate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: user.identifier }),
+        });
+        const { success } = await response.json();
+        if (success) {
+            port.postMessage({ type: 'login', user });
+            loginInfo.style.display = 'none';
+            accountInfo.style.display = 'block';
+            setTimeout(() => (accountInfo.style.opacity = '1'), 10);
 
-        const accountName = document.getElementById('account-info__name');
-        accountName.innerHTML = user.name;
-    } else {
-        loginInfo.style.display = 'block';
-        setTimeout(() => (loginInfo.style.opacity = '1'), 10);
+            const accountName = document.getElementById('account-info__name');
+            accountName.innerHTML = user.name;
+            return
+        }
     }
+
+    loginInfo.style.display = 'block';
+    setTimeout(() => (loginInfo.style.opacity = '1'), 10);
 });
 
 function removeUser() {
