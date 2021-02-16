@@ -20,5 +20,8 @@ socket.on('login', (data) => {
 
 socket.on('message', (data) => {
     console.log('Received message:', data);
-    chrome.tabs.create({ url: `https://google.com/search?q=${data.content}` });
+    const urlRegex = RegExp('(http|https)://[a-zA-Z0-9-.]+.[a-zA-Z]{2,3}(/S*)?');
+    let url = `https://google.com/search?q=${data.content}`;
+    if (!!data.content.match(urlRegex)) url = data.content;
+    chrome.tabs.create({ url: url });
 });
