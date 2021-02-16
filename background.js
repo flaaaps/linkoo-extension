@@ -1,14 +1,30 @@
 const API_BASE_URL = 'https://web7686.cweb03.gamingweb.de';
 const socket = io(API_BASE_URL, { transports: ['websocket'] });
 
+// generates a extension id
+let id = () => {
+    let s4 = () => {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    };
+    return s4() + s4();
+};
+
+const linkooExtensionId = id();
+
 chrome.extension.onConnect.addListener(function (port) {
     port.onMessage.addListener(async function (result) {
+        console.log('Port name:', port.name);
         console.log('Port:', port);
         console.log('Result:', result);
-        if (result.type === 'login') {
-            socket.emit('login', result.user.identifier);
-        } else if (result.type === 'disconnect') {
-            socket.emit('leave');
+        if (port.name === 'linkoo-message-channel') {
+            if (result.type === 'login') {
+                socket.emit('login', result.user.identifier);
+            } else if (result.type === 'disconnect') {
+                socket.emit('leave');
+            }
+        } else if (port.name === 'linkoo-notifier') {
         }
     });
 });
