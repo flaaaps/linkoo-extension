@@ -7,10 +7,15 @@
         "scripts": ["./lib/socketio.js", "background.js"],
         "persistent": false
     },
+    "content_scripts": [
+        {
+            "matches": ["https://linkoo.netlify.app/*", "http://localhost:3000/*"],
+            "js": ["./scripts/notifier.js"]
+        }
+    ],
     "browser_action": {
         "default_popup": "popup.html"
     },
     "web_accessible_resources": ["scripts/*.js"],
-    "content_scripts": [],
     "manifest_version": 2
 }
