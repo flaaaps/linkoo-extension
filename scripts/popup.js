@@ -28,9 +28,13 @@ chrome.storage.sync.get(['user'], async ({ user }) => {
         port.postMessage({ type: 'login', user });
         loginInfo.style.display = 'none';
         accountInfo.style.display = 'block';
+        setTimeout(() => (accountInfo.style.opacity = '1'), 10);
 
         const accountName = document.getElementById('account-info__name');
         accountName.innerHTML = user.name;
+    } else {
+        loginInfo.style.display = 'block';
+        setTimeout(() => (loginInfo.style.opacity = '1'), 10);
     }
 });
 
