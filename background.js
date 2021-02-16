@@ -1,5 +1,5 @@
-// const API_BASE_URL = 'https://web7686.cweb03.gamingweb.de';
-const API_BASE_URL = 'http://localhost:5441';
+const API_BASE_URL = 'https://web7686.cweb03.gamingweb.de';
+// const API_BASE_URL = 'http://localhost:5441';
 const socket = io(API_BASE_URL, { transports: ['websocket'] });
 
 // generates a extension id

@@ -1,7 +1,4 @@
 var background = chrome.extension.getBackgroundPage();
-
-const API_BASE_URL = 'https://web7686.cweb03.gamingweb.de';
-
 const loginForm = document.getElementById('login-form');
 const loginInfo = document.getElementById('login-info');
 
