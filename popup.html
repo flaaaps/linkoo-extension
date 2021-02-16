@@ -7,10 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" href="./styles/popup.css">
     <title>Document</title>
 </head>
 
-<body style="width: 500px" class="my-5">
+<body class="my-5">
     <div class="w-75 mt-5 mx-auto">
         <div id="login-info">
             <h1 id="main-heading">Login</h1>
@@ -25,10 +26,10 @@
             </form>
             Or <a href="https://linkoo.netlify.app/">create an account.</a>
         </div>
-        <div id="account-info" style="display: none">
+        <div id="account-info">
             <h3 id="account-info__name">Loading...</h3>
             <p>As soon as a message with a link arrives, a new tab will open here.</p><button id="logout-btn"
-                class="btn btn-outline-secondary" style="width: 100px;">Logout</button>
+                class="btn btn-outline-secondary">Logout</button>
         </div>
     </div>
     <script src="./lib/socketio.js"></script>
