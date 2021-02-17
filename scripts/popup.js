@@ -26,6 +26,7 @@ port.onMessage.addListener(function (data) {
         showUserDetails(data);
     } else if (data.type === 'logout') {
         showLoginDetails();
+        chrome.storage.sync.set({ loggedIn: false }, null);
     } else if (data.type === 'user') {
         console.log('User data received.');
         console.log('Received user data:', data);
@@ -33,6 +34,14 @@ port.onMessage.addListener(function (data) {
             showLoginDetails();
         } else {
             showUserDetails(data);
+            console.log('Showed user info');
+            chrome.storage.sync.get(['loggedIn'], (data) => {
+                console.log("Let's see if you are logged in:", data);
+                if (!data.loggedIn) {
+                    chrome.storage.sync.set({ loggedIn: true }, null);
+                    port.postMessage({ type: 'login', details: { name: data.details.user.name } });
+                }
+            });
         }
     }
 });
