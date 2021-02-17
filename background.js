@@ -29,7 +29,13 @@ chrome.runtime.onConnect.addListener(function (port) {
         if (messagePort.name === 'linkoo-message-channel') {
             if (result.type === 'login') {
                 console.log('Got login call!!');
-                socket.emit('login', result.details.name);
+                if (result.details?.name) {
+                    socket.emit('login', result.details.name);
+                } else {
+                    chrome.storage.sync.get(['user'], (data) => {
+                        if (data.user.name) socket.emit('login', data.user.name);
+                    });
+                }
             } else if (result.type === 'disconnect') {
                 removeUser();
                 socket.emit('leave');
