@@ -61,6 +61,7 @@ function showLoginDetails() {
     setTimeout(() => (loginInfo.style.opacity = '1'), 10);
 }
 
+port.postMessage({ type: 'login' });
 port.postMessage({ type: 'user' });
 
 addEventListener(
