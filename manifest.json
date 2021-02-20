@@ -1,27 +1,27 @@
 {
     "name": "Linkoo",
     "description": "Automatically open tabs sent from all of your other devices.",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "permissions": ["activeTab", "declarativeContent", "webNavigation", "storage", "https://www.google.com/", "https://stackoverflow.com/"],
     "background": {
-        "scripts": ["./lib/socketio.js", "background.js"],
+        "scripts": ["./lib/socketio.js", "./src/background.js"],
         "persistent": false
     },
     "content_scripts": [
         {
             "matches": ["https://linkoo.netlify.app/*", "http://localhost:3000/*"],
-            "js": ["./scripts/notifier.js"]
+            "js": ["./src/scripts/notifier.js"]
         }
     ],
     "browser_action": {
-        "default_popup": "popup.html",
+        "default_popup": "./src/popup.html",
         "default_icon": {
-            "96": "images/icon_96.png"
+            "96": "src/images/icon_96.png"
         }
     },
     "icons": {
-        "96": "images/icon_96.png"
+        "96": "src/images/icon_96.png"
     },
-    "web_accessible_resources": ["scripts/*.js"],
+    "web_accessible_resources": ["./src/scripts/*.js"],
     "manifest_version": 2
 }
