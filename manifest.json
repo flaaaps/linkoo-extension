@@ -1,7 +1,7 @@
 {
     "name": "Linkoo",
-    "description": "Enhances your experience with search engines like Google and DuckDuckGo",
-    "version": "1.0",
+    "description": "Automatically open tabs sent from all of your other devices.",
+    "version": "1.0.0",
     "permissions": ["activeTab", "declarativeContent", "webNavigation", "storage", "https://www.google.com/", "https://stackoverflow.com/"],
     "background": {
         "scripts": ["./lib/socketio.js", "background.js"],
