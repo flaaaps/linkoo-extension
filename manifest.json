@@ -14,7 +14,13 @@
         }
     ],
     "browser_action": {
-        "default_popup": "popup.html"
+        "default_popup": "popup.html",
+        "default_icon": {
+            "96": "images/icon_96.png"
+        }
+    },
+    "icons": {
+        "96": "images/icon_96.png"
     },
     "web_accessible_resources": ["scripts/*.js"],
     "manifest_version": 2
